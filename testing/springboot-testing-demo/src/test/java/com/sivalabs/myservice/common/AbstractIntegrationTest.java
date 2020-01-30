@@ -1,7 +1,7 @@
 package com.sivalabs.myservice.common;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import org.mockserver.client.MockServerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -53,8 +55,9 @@ public abstract class AbstractIntegrationTest {
 
     public static class Initializer
             implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            log.info("githuub.api.base-url=" + mockServerContainer.getEndpoint());
+        @Override
+		public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+			//log.info("githuub.api.base-url=" + mockServerContainer.getEndpoint());
             TestPropertyValues.of(
                     "spring.datasource.url=" + sqlContainer.getJdbcUrl(),
                     "spring.datasource.username=" + sqlContainer.getUsername(),
