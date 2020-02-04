@@ -1,8 +1,22 @@
 package com.sivalabs.myservice.web.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sivalabs.myservice.entities.User;
-import com.sivalabs.myservice.services.UserService;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +28,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.zalando.problem.ProblemModule;
 import org.zalando.problem.violations.ConstraintViolationProblemModule;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sivalabs.myservice.entities.User;
+import com.sivalabs.myservice.services.UserService;
 
 @WebMvcTest(controllers = UserController.class)
 @ActiveProfiles("test")
@@ -91,7 +97,7 @@ class UserControllerTest {
 
         User user = new User(null, "newuser1@gmail.com", "pwd", "Name");
         this.mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email", is(user.getEmail())))
@@ -104,9 +110,8 @@ class UserControllerTest {
     @Test
     void shouldReturn400WhenCreateNewUserWithoutEmail() throws Exception {
         User user = new User(null, null, "pwd", "Name");
-
         this.mockMvc.perform(post("/api/users")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isBadRequest())
                 .andExpect(header().string("Content-Type", is("application/problem+json")))
@@ -128,7 +133,7 @@ class UserControllerTest {
         given(userService.updateUser(any(User.class))).willAnswer((invocation) -> invocation.getArgument(0));
 
         this.mockMvc.perform(put("/api/users/{id}", user.getId())
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email", is(user.getEmail())))
@@ -144,7 +149,7 @@ class UserControllerTest {
         User user = new User(userId, "user1@gmail.com", "pwd", "Name");
 
         this.mockMvc.perform(put("/api/users/{id}", userId)
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isNotFound());
 

@@ -1,10 +1,11 @@
 package com.sivalabs.myservice.common;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PostgreSQLContainerInitializer
@@ -13,7 +14,7 @@ public class PostgreSQLContainerInitializer
     private static PostgreSQLContainer sqlContainer;
 
     static {
-        sqlContainer = new PostgreSQLContainer("postgres:10.7")
+		sqlContainer = new PostgreSQLContainer<>("postgres:10.7")
                 .withDatabaseName("integration-tests-db")
                 .withUsername("sa")
                 .withPassword("sa");
