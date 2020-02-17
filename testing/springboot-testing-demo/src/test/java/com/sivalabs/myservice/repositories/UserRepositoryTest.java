@@ -1,27 +1,29 @@
 package com.sivalabs.myservice.repositories;
 
-import com.sivalabs.myservice.common.PostgreSQLContainerInitializer;
-import com.sivalabs.myservice.entities.User;
-import lombok.extern.slf4j.Slf4j;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 
-import javax.persistence.EntityManager;
-import java.util.Optional;
+import com.sivalabs.myservice.common.PostgreSQLContainerInitializer;
+import com.sivalabs.myservice.entities.User;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@DataJpaTest
-@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
+@DataJpaTest(showSql = true)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ContextConfiguration(initializers = {PostgreSQLContainerInitializer.class})
 class UserRepositoryTest {
 
     @Autowired
-    EntityManager entityManager;
+	TestEntityManager entityManager;
 
     @Autowired
     private UserRepository userRepository;
